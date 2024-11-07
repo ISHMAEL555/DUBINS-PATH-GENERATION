@@ -1,0 +1,111 @@
+# RSR Dubins Path Theory
+
+### Overview
+
+The RSR (Right-Start, Right-Finish) Dubins path is a shortest path solution for a vehicle with a minimum turning radius to move from an initial position \((x_i, y_i)\) with an initial heading \(\psi_i\) to a final position \((x_f, y_f)\) with a final heading \(\psi_f\). The RSR path consists of three segments:
+1. A right circular arc from the initial position.
+2. A straight-line segment.
+3. A right circular arc to the final position.
+
+### Path Description
+
+#### Step 1: **Start Circle Center \((CR_i)\)**
+
+The center of the starting circle, denoted \(CR_i\), is calculated as follows:
+\[
+(x_{Ri}, y_{Ri}) = (x_i + \rho \cos(\psi_i), y_i - \rho \sin(\psi_i))
+\]
+Where:
+- \( (x_i, y_i) \) is the initial position.
+- \( \psi_i \) is the initial heading.
+- \( \rho \) is the minimum turning radius of the vehicle.
+
+#### Step 2: **End Circle Center \((CR_f)\)**
+
+The center of the final circle, denoted \(CR_f\), is calculated as follows:
+\[
+(x_{Rf}, y_{Rf}) = (x_f + \rho \cos(\psi_f), y_f - \rho \sin(\psi_f))
+\]
+Where:
+- \( (x_f, y_f) \) is the final position.
+- \( \psi_f \) is the final heading.
+
+#### Step 3: **Computing the Angle \(\theta\)**
+
+The angle \(\theta\), which determines the orientation of the straight-line segment, is calculated as:
+\[
+\theta = \frac{\pi}{2} - \tan^{-1}\left(\frac{y_Rf - y_Ri}{x_Rf - x_Ri}\right)
+\]
+Where:
+- \( \tan^{-1} \) is the inverse tangent function (arctangent).
+- \( (x_Ri, y_Ri) \) and \( (x_Rf, y_Rf) \) are the coordinates of the circle centers.
+
+#### Step 4: **Computing the Straight Line Length \(d\)**
+
+The length \(d\) of the straight-line segment between the two circle centers is computed as the Euclidean distance:
+\[
+d = \sqrt{(x_Rf - x_Ri)^2 + (y_Rf - y_Ri)^2}
+\]
+
+### Path Generation
+
+The Dubins path is generated in three segments:
+
+1. **Arc 1: First Circle (Right Turn)**
+
+   The coordinates of the points along the first arc are calculated by rotating the initial point \(p_i\) clockwise around the circle center \(CR_i\), incrementing the heading by \(\Delta \psi\) each time:
+   \[
+   p_n = [x_n, y_n] = [x_{Ri} + \rho \sin(\psi_n), y_{Ri} + \rho \cos(\psi_n)]
+   \]
+   Where \(\psi_n\) starts at \(\psi_i\) and is incremented until \(\psi_n = \theta\).
+
+2. **Straight Line Segment**
+
+   The points along the straight line segment are calculated by incrementing the previous point \(p_{n-1}\) by a fixed distance \(\Delta d\) in the direction of \(\theta\):
+   \[
+   p_n = [x_n, y_n] = [x_{n-1} + \Delta_d \sin(\theta), y_{n-1} + \Delta_d \cos(\theta)]
+   \]
+   This is repeated until the end of the straight line segment is reached.
+
+3. **Arc 2: Second Circle (Right Turn)**
+
+   The points along the second arc are calculated by rotating the final point of the straight-line segment around the circle center \(CR_f\), again incrementing the heading by \(\Delta \psi\) each time:
+   \[
+   p_n = [x_n, y_n] = [x_{Rf} + \rho \sin(\psi_n), y_{Rf} + \rho \cos(\psi_n)]
+   \]
+   Where \(\psi_n\) starts at \(\theta\) and is incremented until \(\psi_n = \psi_f\).
+
+### Summary of Formulas
+
+1. **Circle Centers:**
+   \[
+   (x_{Ri}, y_{Ri}) = (x_i + \rho \cos(\psi_i), y_i - \rho \sin(\psi_i))
+   \]
+   \[
+   (x_{Rf}, y_{Rf}) = (x_f + \rho \cos(\psi_f), y_f - \rho \sin(\psi_f))
+   \]
+
+2. **Angle \(\theta\):**
+   \[
+   \theta = \frac{\pi}{2} - \tan^{-1}\left(\frac{y_Rf - y_Ri}{x_Rf - x_Ri}\right)
+   \]
+
+3. **Straight Line Length \(d\):**
+   \[
+   d = \sqrt{(x_Rf - x_Ri)^2 + (y_Rf - y_Ri)^2}
+   \]
+
+4. **Path Points (Arc and Straight Line):**
+   \[
+   p_n = [x_n, y_n] = [x_{Ri} + \rho \sin(\psi_n), y_{Ri} + \rho \cos(\psi_n)] \quad \text{for the first arc}
+   \]
+   \[
+   p_n = [x_n, y_n] = [x_{n-1} + \Delta_d \sin(\theta), y_{n-1} + \Delta_d \cos(\theta)] \quad \text{for the straight line segment}
+   \]
+   \[
+   p_n = [x_n, y_n] = [x_{Rf} + \rho \sin(\psi_n), y_{Rf} + \rho \cos(\psi_n)] \quad \text{for the second arc}
+   \]
+
+### Reference
+
+- Dubins, L. E. (1957). *On Curves of Minimal Length with a Constraint on Average Curvature, and with Prescribed Initial and Terminal Positions and Tangents*, American Journal of Mathematics, 79(3), 497-516. [DOI: 10.2307/2372855]
