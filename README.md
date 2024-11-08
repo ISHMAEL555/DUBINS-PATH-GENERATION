@@ -7,7 +7,7 @@ For a detailed description of the theory behind Dubins paths, including the math
 ## Contents
 
 1. [Overview](#overview)
-2. [Dubins Path Theory](docs/Theory.md)
+2. [Dubins Path Theory](docs/theory.md)
 3. [Future Steps](#future-steps)
 
 ## Future Steps
